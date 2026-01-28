@@ -13,7 +13,7 @@ const exchanges: RabbitMQExchangeConfig[] = [
 
 export const amqpConfig = (configService: ConfigService): RabbitMQConfig => {
   const uri = configService.get('AMQP_URI');
-  console.log(uri);
+
   if (!uri) throw new Error('"AMQP_URI" not found. Check .env');
 
   return {
