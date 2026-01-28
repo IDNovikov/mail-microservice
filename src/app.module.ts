@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-
+import { MailModule } from './modules/mail/mail.module';
+import { AppConfigModule } from './modules/config/config.module';
+import { AmqpModule } from './modules/amqp/amqp.module';
+import { ChannelsModule } from './modules/chanels/chanels.module';
 
 @Module({
-  imports: [],
+  imports: [MailModule, AppConfigModule, AmqpModule, ChannelsModule],
   controllers: [],
-  providers: [  ],
+  providers: [],
 })
 export class AppModule {}
