@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MailService } from '../mail/mail.service';
 import { RabbitRPC } from '@golevelup/nestjs-rabbitmq';
+import { CreateMessageDTO } from '../mail/domain/dto/CreateMessageDTO';
 
 @Injectable()
 export class ConsumerService {
@@ -12,8 +13,12 @@ export class ConsumerService {
     routingKey: 'send-mail',
     queue: 'send-mail',
   })
-  private async sendVerifyMail(to: string, code: string) {
-    this.logger.log(to, code);
-    await this.mailService.sendVerificationMail(to, code);
+  private async sendVerifyMail(data: CreateMessageDTO) {
+    try {
+      const sendedMail = await this.mailService.sendMail(data);
+      return sendedMail;
+    } catch (err) {
+      this.logger.error(err);
+    }
   }
 }
