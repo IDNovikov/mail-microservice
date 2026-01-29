@@ -1,4 +1,5 @@
 import {
+  MessageHandlerErrorBehavior,
   RabbitMQConfig,
   RabbitMQExchangeConfig,
 } from '@golevelup/nestjs-rabbitmq';
@@ -20,9 +21,12 @@ export const amqpConfig = (configService: ConfigService): RabbitMQConfig => {
     exchanges,
     uri,
     connectionInitOptions: { wait: false },
+    
+    defaultSubscribeErrorBehavior:MessageHandlerErrorBehavior.NACK,
     connectionManagerOptions: {
       heartbeatIntervalInSeconds: 15,
       reconnectTimeInSeconds: 30,
     },
+    
   };
 };

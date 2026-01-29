@@ -27,15 +27,17 @@ export class MailService {
     });
   }
   async sendMail(dto: CreateMessageDTO) {
+    console.log(dto)
     const { toEmail, subject, text, html } = dto;
     try {
       const info = await this.transporter.sendMail({
         from: `"AfishaVed" <${this.config.get('EMAIL_USER')}>`,
-        toEmail,
+        to:toEmail,
         subject,
         text,
         html: html ?? text,
       });
+      return info
     } catch (error) {
       this.logger.error(error.stack);
       throw new ServiceUnavailableException('Error with mailer');
