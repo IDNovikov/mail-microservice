@@ -2,6 +2,10 @@ import { Type } from 'class-transformer';
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class CreateMessageDTO {
+  @IsOptional()
+  @IsString()
+  from?: string;
+
   @IsEmail()
   @IsString()
   toEmail: string;

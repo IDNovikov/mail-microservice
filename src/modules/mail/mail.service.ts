@@ -26,43 +26,24 @@ export class MailService {
       auth: { user, pass },
     });
   }
-  async sendMail(dto: CreateMessageDTO) {
-    console.log(dto)
-    const { toEmail, subject, text, html } = dto;
+  async sendMail(
+    dto: CreateMessageDTO,
+  ): Promise<SMTPTransport.SentMessageInfo> {
+    const { from, toEmail, subject, text, html } = dto;
     try {
-      const info = await this.transporter.sendMail({
-        from: `"AfishaVed" <${this.config.get('EMAIL_USER')}>`,
-        to:toEmail,
-        subject,
+      const mail: nodemailer.SendMailOptions = {
+        from: `"${from ? from : ''}" <${this.config.get('EMAIL_USER')}>`,
+        to: toEmail,
+        subject: subject,
         text,
         html: html ?? text,
-      });
-      return info
+      };
+
+      const info = await this.transporter.sendMail(mail);
+      return info;
     } catch (error) {
       this.logger.error(error.stack);
       throw new ServiceUnavailableException('Error with mailer');
     }
   }
-
-  // async sendVerificationMail(to: string, code: string) {
-  //   const html = `
-  //     <div style="font-family:sans-serif;padding:20px">
-  //       <h2>Подтверждение почты</h2>
-  //       <p>Ваш код: <b>${code}</b></p>
-  //       <p>Он действителен 10 минут.</p>
-  //     </div>`;
-
-  //   await this.sendMail(to, 'Код подтверждения', `Ваш код: ${code}`, html);
-  // }
-
-  // async sendTempPass(to: string, tempPass: string) {
-  //   const html = `
-  //     <div style="font-family:sans-serif;padding:20px">
-  //       <h2>Временный пароль</h2>
-  //       <p>Пароль: <b>${tempPass}</b></p>
-  //       <p>После входа, пожалуйста, как можно быстрее обновите пароль</p>
-  //     </div>`;
-
-  //   await this.sendMail(to, 'Временный пароль', `Пароль: ${tempPass}`, html);
-  // }
 }
