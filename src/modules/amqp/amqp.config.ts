@@ -4,6 +4,7 @@ import {
   RabbitMQExchangeConfig,
 } from '@golevelup/nestjs-rabbitmq';
 import { ConfigService } from '@nestjs/config';
+import { SendMailContract } from './contracts/queues/mail/send-mail.contract';
 
 const exchanges: RabbitMQExchangeConfig[] = [
   {
@@ -20,13 +21,19 @@ export const amqpConfig = (configService: ConfigService): RabbitMQConfig => {
   return {
     exchanges,
     uri,
-    connectionInitOptions: { wait: false },
-    
-    defaultSubscribeErrorBehavior:MessageHandlerErrorBehavior.NACK,
+
+    queues: [
+      {
+        name: SendMailContract.queue.queue, // "mail-send"
+        options: { durable: true },
+      },
+    ],
+    connectionInitOptions: { wait: true },
+    enableControllerDiscovery: true,
+    defaultSubscribeErrorBehavior: MessageHandlerErrorBehavior.NACK,
     connectionManagerOptions: {
       heartbeatIntervalInSeconds: 15,
       reconnectTimeInSeconds: 30,
     },
-    
   };
 };

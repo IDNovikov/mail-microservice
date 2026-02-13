@@ -6,15 +6,11 @@ import {
   RabbitSubscribe,
 } from '@golevelup/nestjs-rabbitmq';
 import { SendMailContract } from '../amqp/contracts/queues/mail/send-mail.contract';
-import { RedisService } from '../redis/redis.service';
 
 @Injectable()
 export class ConsumerService {
   private readonly logger = new Logger(ConsumerService.name);
-  constructor(
-    private readonly redis: RedisService,
-    private readonly mailService: MailService,
-  ) {}
+  constructor(private readonly mailService: MailService) {}
 
   @RabbitSubscribe({
     exchange: SendMailContract.queue.exchange.name,
